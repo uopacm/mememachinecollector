@@ -17,11 +17,7 @@ reddit = praw.Reddit(client_id='B8ZEg7a304hCfw',
 def main():
 	subredditsFile = open(args.subReddits, "r")
 
-	#TODO:Fix this garbage code
-	#i forgot how to make an empty list in python, then append objects to it, so i did this for now :(
-	#austin pls halp
-	subreddits = [reddit.subreddit("nice_meme")];
-	subreddits.pop(0)
+	subreddits = []
 
 	#read subreddit names from file into list "subreddits" as subreddit objects
 	for line in subredditsFile.readlines():
