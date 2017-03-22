@@ -4,6 +4,7 @@ import os
 import time
 from urllib import request
 import random
+import json
 
 parser = argparse.ArgumentParser(description='Fetch URLs of reddit images')
 parser.add_argument('urlNumber', type=int, help='Number of URLs to look up per subreddit')
@@ -25,14 +26,49 @@ def main():
 		subreddits.append(reddit.subreddit(line.strip()))
 
 	#for every subreddit, get Images
+	urls = []
+	titles = []
+	dates = []
 	for subreddit in subreddits:
-		getImagesFromSubreddit(subreddit)
+		posts = getImagesFromSubreddit(subreddit)
+		urls = posts[0]
+		titles = posts[1]
+		dates = posts[2]
 	
 	subreddit = getRandomSubreddit(subreddits)
-	getImagesFromSubreddit(subreddit)
+	posts = getImagesFromSubreddit(subreddit)
+	
+	for url in posts[0]:
+		urls.append(url)
+	
+	for title in posts[1]:
+		titles.append(title)
+	
+	for date in posts[2]:
+		dates.append(date)
+	
+	payload = {
+		'memes': []
+	}
+	
+	for i in range(args.urlNumber):
+		meme = {
+			'url': urls[i],
+			'title': titles[i],
+			'datePosted': dates[i],
+			'datePulled': int(time.time())
+		}
+		payload.get('memes').append(meme)
+	
+	with open('sample.json', 'w') as f:
+		f.write(json.dumps(payload, ensure_ascii=True))
 
 def getImagesFromSubreddit(subreddit):
-	for i,submission in enumerate(subreddit.hot(limit=int(args.urlNumber))):
+	urls = []
+	titles = []
+	dates = []
+	
+	for submission in subreddit.hot(limit=int(args.urlNumber)):
 		#sleep for 1s so that we don't request too fast and violate reddit ToS
 		time.sleep(1)
 
@@ -48,9 +84,15 @@ def getImagesFromSubreddit(subreddit):
 		elif '.png' in url:
 			request.urlretrieve(url, '{}/image{}.png'.format(args.saveDirectory,i))'''
 		if '.jpg' in url:
-			request.urlretrieve(url, '{}/{}.jpg'.format(args.saveDirectory,submission.id))
+			urls.append(url)
+			titles.append(submission.title)
+			dates.append(submission.created)
 		elif '.png' in url:
-			request.urlretrieve(url, '{}/{}.png'.format(args.saveDirectory,submission.id))
+			urls.append(url)
+			titles.append(submission.title)
+			dates.append(submission.created)
+	
+	return (urls, titles, dates)
 
 def getRandomSubreddit(subreddits):
 	randomSubs = reddit.subreddits.search_by_topic('memes')
