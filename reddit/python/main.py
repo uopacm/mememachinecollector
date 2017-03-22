@@ -53,17 +53,17 @@ def getImagesFromSubreddit(subreddit):
 			request.urlretrieve(url, '{}/{}.png'.format(args.saveDirectory,submission.id))
 
 def getRandomSubreddit(subreddits):
-	list = reddit.subreddits.search_by_topic('memes')
-	randNum = random.randint(0,len(list) - 1)
+	randomSubs = reddit.subreddits.search_by_topic('memes')
+	randomSub = random.choice(randomSubs)
 	
-	while 'memes' not in list[randNum].display_name and list[randNum] in subreddits:
-		randNum = random.randint(0,len(list) - 1)
+	while 'memes' not in randomSub.display_name and randomSub in subreddits:
+		randomSub = random.choice(randomSubs)
 		
-		if 'memes' in list[randNum].display_name or 'meme' in list[randNum].display_name:
+		if 'memes' in randomSub.display_name or 'meme' in randomSub.display_name:
 			break
 	
-	print(list[randNum].display_name)
-	return list[randNum]
+	print(randomSub.display_name)
+	return randomSub
 
 if __name__ == "__main__":
 	# Create the requested directory if it does not exist
