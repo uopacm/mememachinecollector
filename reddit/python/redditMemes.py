@@ -8,7 +8,6 @@ import json
 
 parser = argparse.ArgumentParser(description='Fetch URLs of reddit images')
 parser.add_argument('urlNumber', type=int, help='Number of URLs to look up per subreddit')
-parser.add_argument('saveDirectory', type=str, help='Directory to save images in')
 parser.add_argument('subReddits', type=str, help='File containing list of subreddits', default="subredditList.txt")
 args = parser.parse_args()
 
