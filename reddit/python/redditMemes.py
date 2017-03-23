@@ -1,4 +1,3 @@
-import argparse
 import praw
 import os
 import time
@@ -6,16 +5,11 @@ from urllib import request
 import random
 import json
 
-parser = argparse.ArgumentParser(description='Fetch URLs of reddit images')
-parser.add_argument('urlNumber', type=int, help='Number of URLs to look up per subreddit')
-parser.add_argument('subReddits', type=str, help='File containing list of subreddits', default="subredditList.txt")
-args = parser.parse_args()
-
 reddit = praw.Reddit(client_id='B8ZEg7a304hCfw',
 	client_secret='wWoLUJrIAWGbPddy3W0lzU7dVqw',
 	user_agent='meme-machine:reddit-collector:v1.0 (by /u/theMusicalGamer88)')
 
-def getMemes():
+def getMemes(args):
 	subredditsFile = open(args.subReddits, "r")
 
 	subreddits = []
@@ -30,7 +24,7 @@ def getMemes():
 	dates = []
 	ids = []
 	for subreddit in subreddits:
-		posts = getImagesFromSubreddit(subreddit)
+		posts = getImagesFromSubreddit(subreddit, args)
 		
 		for url in posts[0]:
 			urls.append(url)
@@ -45,7 +39,7 @@ def getMemes():
 			ids.append(id)
 	
 	subreddit = getRandomSubreddit(subreddits)
-	posts = getImagesFromSubreddit(subreddit)
+	posts = getImagesFromSubreddit(subreddit, args)
 	
 	for url in posts[0]:
 		urls.append(url)
@@ -75,7 +69,7 @@ def getMemes():
 	
 	return json.dumps(payload, ensure_ascii=True)
 
-def getImagesFromSubreddit(subreddit):
+def getImagesFromSubreddit(subreddit, args):
 	urls = []
 	titles = []
 	dates = []

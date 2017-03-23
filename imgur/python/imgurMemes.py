@@ -20,6 +20,7 @@ client = ImgurClient(client_id, client_secret)
 
 def getMemes():
 	memes = []
+	ids = []
 	
 	# Gather top memes for the week
 	items = client.gallery_search("memes", sort='top', window= 'week')
@@ -28,17 +29,24 @@ def getMemes():
 	
 	# Show top 5 memes
 	memes = memes[:5]
+	images = []
 	for meme in memes:
-		print(meme.link)
+		album = client.get_album_images(meme.link[19:])
+		
+		for i in album:
+			images.append(i)
+	
+	for image in images:
+		ids.append(image.id)
 	
 	payload = {
 		'memes': []
 	}
 	
-	for meme in memes:
+	for id in ids:
 		pMeme = {
-			'url': meme.link,
-			'text0': 'imgurImage',
+			'url': 'http://imgur.com/{}.png'.format(id),
+			'text0': id,
 			'datePosted': 0, # Not entirely sure how the ImgurClient works, and also can't look it up at this time (no WiFi in Tahoe)
 			'datePulled': int(time.time())
 		}
