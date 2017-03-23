@@ -16,7 +16,7 @@ reddit = praw.Reddit(client_id='B8ZEg7a304hCfw',
 	client_secret='wWoLUJrIAWGbPddy3W0lzU7dVqw',
 	user_agent='meme-machine:reddit-collector:v1.0 (by /u/theMusicalGamer88)')
 
-def main():
+def getMemes():
 	subredditsFile = open(args.subReddits, "r")
 
 	subreddits = []
@@ -29,11 +29,21 @@ def main():
 	urls = []
 	titles = []
 	dates = []
+	ids = []
 	for subreddit in subreddits:
 		posts = getImagesFromSubreddit(subreddit)
-		urls = posts[0]
-		titles = posts[1]
-		dates = posts[2]
+		
+		for url in posts[0]:
+			urls.append(url)
+		
+		for title in posts[1]:
+			titles.append(title)
+		
+		for date in posts[2]:
+			dates.append(date)
+		
+		for id in posts[3]:
+			ids.append(id)
 	
 	subreddit = getRandomSubreddit(subreddits)
 	posts = getImagesFromSubreddit(subreddit)
@@ -47,6 +57,9 @@ def main():
 	for date in posts[2]:
 		dates.append(date)
 	
+	for id in posts[3]:
+		ids.append(id)
+	
 	payload = {
 		'memes': []
 	}
@@ -55,18 +68,19 @@ def main():
 		meme = {
 			'url': urls[i],
 			'title': titles[i],
+			'text0': ids[i],
 			'datePosted': dates[i],
 			'datePulled': int(time.time())
 		}
 		payload.get('memes').append(meme)
 	
-	with open('sample.json', 'w') as f:
-		f.write(json.dumps(payload, ensure_ascii=True))
+	return json.dumps(payload, ensure_ascii=True)
 
 def getImagesFromSubreddit(subreddit):
 	urls = []
 	titles = []
 	dates = []
+	ids = []
 	
 	for submission in subreddit.hot(limit=int(args.urlNumber)):
 		#sleep for 1s so that we don't request too fast and violate reddit ToS
@@ -83,16 +97,13 @@ def getImagesFromSubreddit(subreddit):
 			request.urlretrieve(url, '{}/image{}.jpg'.format(args.saveDirectory,i))
 		elif '.png' in url:
 			request.urlretrieve(url, '{}/image{}.png'.format(args.saveDirectory,i))'''
-		if '.jpg' in url:
+		if '.jpg' in url or '.png' in url:
 			urls.append(url)
 			titles.append(submission.title)
 			dates.append(submission.created)
-		elif '.png' in url:
-			urls.append(url)
-			titles.append(submission.title)
-			dates.append(submission.created)
-	
-	return (urls, titles, dates)
+			ids.append(submission.id)
+			
+	return (urls, titles, dates, ids)
 
 def getRandomSubreddit(subreddits):
 	randomSubs = reddit.subreddits.search_by_topic('memes')
@@ -106,10 +117,3 @@ def getRandomSubreddit(subreddits):
 	
 	print(randomSub.display_name)
 	return randomSub
-
-if __name__ == "__main__":
-	# Create the requested directory if it does not exist
-	if not os.path.exists(args.saveDirectory):
-		os.makedirs(args.saveDirectory)
-
-	main()
