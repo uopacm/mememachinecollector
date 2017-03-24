@@ -23,10 +23,13 @@ def main():
 		memeDict.get('memes').append(meme)
 	
 	# Receive from Imgur
-	imgur = imgurMemes.getMemes()
+	imgur = imgurMemes.getMemes(args)
 	imgurJson = json.loads(imgur)
 	for meme in imgurJson.get('memes'):
 		memeDict.get('memes').append(meme)
+	
+	with open('payload.json', 'w') as f:
+		f.write(json.dumps(memeDict, ensure_ascii=True))
 	
 	download(memeDict.get('memes'))
 
@@ -35,10 +38,13 @@ def download(memeList):
 		time.sleep(1)
 		print('Downloading ' + meme.get('url') + '...')
 		
-		if '.jpg' in meme.get('url'):
-			request.urlretrieve(meme.get('url'), '{}/{}.jpg'.format(args.saveDirectory, meme.get('text0')))
-		elif '.png' in meme.get('url'):
-			request.urlretrieve(meme.get('url'), '{}/{}.png'.format(args.saveDirectory, meme.get('text0')))
+		if meme.get('source') == 'reddit':
+			if '.jpg' in meme.get('url'):
+				request.urlretrieve(meme.get('url'), '{}/{}{}.jpg'.format(args.saveDirectory, meme.get('source'), meme.get('text0')))
+			elif '.png' in meme.get('url'):
+				request.urlretrieve(meme.get('url'), '{}/{}{}.png'.format(args.saveDirectory, meme.get('source'), meme.get('text0')))
+		
+		print('Done.')
 
 if __name__ == '__main__':
 	if not os.path.exists(args.saveDirectory):

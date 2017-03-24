@@ -2,6 +2,7 @@ import argparse
 from imgurpython import ImgurClient
 import time
 import json
+import pdb
 # Install:
 # python -m pip install imgurpython
 
@@ -18,7 +19,7 @@ client_secret = '6ac86735ce1cc66ba6509ba6224446eb17554dc9'
 
 client = ImgurClient(client_id, client_secret)
 
-def getMemes():
+def getMemes(args):
 	memes = []
 	ids = []
 	
@@ -33,8 +34,10 @@ def getMemes():
 	for meme in memes:
 		album = client.get_album_images(meme.link[19:])
 		
-		for i in album:
-			images.append(i)
+		for i in range(args.urlNumber):
+			if i >= len(album):
+				i = len(album) - 1
+			images.append(album[i])
 	
 	for image in images:
 		ids.append(image.id)
@@ -43,12 +46,12 @@ def getMemes():
 		'memes': []
 	}
 	
-	for id in ids:
+	for i,id in enumerate(ids):
 		pMeme = {
 			'url': 'http://imgur.com/{}.png'.format(id),
-			'text0': id,
-			'datePosted': 0, # Not entirely sure how the ImgurClient works, and also can't look it up at this time (no WiFi in Tahoe)
-			'datePulled': int(time.time())
+			'text0': i,
+			'datePulled': int(time.time()),
+			'source': 'imgur'
 		}
 		payload.get('memes').append(pMeme)
 	

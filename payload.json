@@ -1,0 +1,80 @@
+{
+	"memes": [
+		{
+			"url": "https://i.redd.it/vr5rlwo1p6ny.jpg",
+			"title": "someBODY ONCE TOLD ME",
+			"text0": 1490315207.0,
+			"datePosted": 1490315207.0,
+			"datePulled": 1490328140,
+			"source": "reddit"
+		},
+		{
+			"url": "https://i.redd.it/oey0c9pih7ny.jpg",
+			"title": "...",
+			"text0": 1490324760.0,
+			"datePosted": 1490324760.0,
+			"datePulled": 1490328140,
+			"source": "reddit"
+		},
+		{
+			"url": "http://imgur.com/u6M2lvX.png",
+			"text0": 0,
+			"datePulled": 1490328142,
+			"source": "imgur"
+		},
+		{
+			"url": "http://imgur.com/cYDj3qI.png",
+			"text0": 1,
+			"datePulled": 1490328142,
+			"source": "imgur"
+		},
+		{
+			"url": "http://imgur.com/SlMybtq.png",
+			"text0": 2,
+			"datePulled": 1490328142,
+			"source": "imgur"
+		},
+		{
+			"url": "http://imgur.com/w5WzAp4.png",
+			"text0": 3,
+			"datePulled": 1490328142,
+			"source": "imgur"
+		},
+		{
+			"url": "http://imgur.com/0tbriCy.png",
+			"text0": 4,
+			"datePulled": 1490328142,
+			"source": "imgur"
+		},
+		{
+			"url": "http://imgur.com/jmYJiX7.png",
+			"text0": 5,
+			"datePulled": 1490328142,
+			"source": "imgur"
+		},
+		{
+			"url": "http://imgur.com/bMEi2KJ.png",
+			"text0": 6,
+			"datePulled": 1490328142,
+			"source": "imgur"
+		},
+		{
+			"url": "http://imgur.com/bMEi2KJ.png",
+			"text0": 7,
+			"datePulled": 1490328142,
+			"source": "imgur"
+		},
+		{
+			"url": "http://imgur.com/FnBGAIf.png",
+			"text0": 8,
+			"datePulled": 1490328142,
+			"source": "imgur"
+		},
+		{
+			"url": "http://imgur.com/G6ISjxp.png",
+			"text0": 9,
+			"datePulled": 1490328142,
+			"source": "imgur"
+		}
+	]
+}

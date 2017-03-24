@@ -34,9 +34,6 @@ def getMemes(args):
 		
 		for date in posts[2]:
 			dates.append(date)
-		
-		for id in posts[3]:
-			ids.append(id)
 	
 	subreddit = getRandomSubreddit(subreddits)
 	posts = getImagesFromSubreddit(subreddit, args)
@@ -50,9 +47,6 @@ def getMemes(args):
 	for date in posts[2]:
 		dates.append(date)
 	
-	for id in posts[3]:
-		ids.append(id)
-	
 	payload = {
 		'memes': []
 	}
@@ -61,9 +55,10 @@ def getMemes(args):
 		meme = {
 			'url': urls[i],
 			'title': titles[i],
-			'text0': ids[i],
+			'text0': dates[i],
 			'datePosted': dates[i],
-			'datePulled': int(time.time())
+			'datePulled': int(time.time()),
+			'source': 'reddit'
 		}
 		payload.get('memes').append(meme)
 	
@@ -73,7 +68,6 @@ def getImagesFromSubreddit(subreddit, args):
 	urls = []
 	titles = []
 	dates = []
-	ids = []
 	
 	for submission in subreddit.hot(limit=int(args.urlNumber)):
 		#sleep for 1s so that we don't request too fast and violate reddit ToS
@@ -94,9 +88,8 @@ def getImagesFromSubreddit(subreddit, args):
 			urls.append(url)
 			titles.append(submission.title)
 			dates.append(submission.created)
-			ids.append(submission.id)
 			
-	return (urls, titles, dates, ids)
+	return (urls, titles, dates)
 
 def getRandomSubreddit(subreddits):
 	randomSubs = reddit.subreddits.search_by_topic('memes')
