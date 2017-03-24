@@ -44,11 +44,10 @@ def download(memeList):
 		time.sleep(1)
 		print('Downloading ' + meme.get('url') + '...')
 		
-		if meme.get('source') == 'reddit':
-			if '.jpg' in meme.get('url'):
-				request.urlretrieve(meme.get('url'), '{}/{}{}.jpg'.format(args.saveDirectory, meme.get('source'), meme.get('text0')))
-			elif '.png' in meme.get('url'):
-				request.urlretrieve(meme.get('url'), '{}/{}{}.png'.format(args.saveDirectory, meme.get('source'), meme.get('text0')))
+		if '.jpg' in meme.get('url'):
+			request.urlretrieve(meme.get('url'), '{}/{}{}.jpg'.format(args.saveDirectory, meme.get('source'), meme.get('text0')))
+		elif '.png' in meme.get('url'):
+			request.urlretrieve(meme.get('url'), '{}/{}{}.png'.format(args.saveDirectory, meme.get('source'), meme.get('text0')))
 		
 		print('Done.')
 
