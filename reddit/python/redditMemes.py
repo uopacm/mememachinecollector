@@ -64,7 +64,8 @@ def getMemes(args):
 			}
 		payload.get('memes').append(meme)
 	
-	return json.dumps(payload, ensure_ascii=True)
+	with open(args.payloadFile, 'w') as f:
+		f.write(json.dumps(payload))
 
 def getImagesFromSubreddit(subreddit, args):
 	urls = []

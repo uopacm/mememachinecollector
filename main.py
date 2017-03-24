@@ -12,37 +12,32 @@ parser.add_argument('urlNumber', type=int, help='Number of URLs to look up per s
 parser.add_argument('subReddits', type=str, help='File containing list of subreddits', default="subredditList.txt")
 parser.add_argument('saveDirectory', type=str, help='Directory to save images in')
 parser.add_argument('popularNew', type=bool, help='Get Popular (1) or New (0) Memes from MemeGenerator', default=False)
+parser.add_argument('payloadFile', type=str, help='File name of the json file', default='payload.json')
 args = parser.parse_args()
 
 def main():
-	memeDict = {
-		'memes': []
-	}
 	# Receive from Reddit
 	print('Receiving JSON payload from Reddit...')
-	reddit = redditMemes.getMemes(args)
-	redditJson = json.loads(reddit)
-	for meme in redditJson.get('memes'):
-		memeDict.get('memes').append(meme)
+	redditMemes.getMemes(args)
 	
 	# Receive from Imgur
 	print('Receiving JSON payload from Imgur...')
-	imgur = imgurMemes.getMemes(args)
-	imgurJson = json.loads(imgur)
-	for meme in imgurJson.get('memes'):
-		memeDict.get('memes').append(meme)
+	imgurMemes.getMemes(args)
 	
 	# Receive from MemeGenerator
 	print('Receiving JSON payload from MemeGenerator...')
-	memeGen = memeGenMemes.getMemes(args)
-	memeGenJson = json.loads(memeGen)
-	for meme in memeGenJson.get('memes'):
-		memeDict.get('memes').append(meme)
+	memeGenMemes.getMemes(args)
 	
-	with open('payload.json', 'w') as f:
-		f.write(json.dumps(memeDict, ensure_ascii=True))
+	# Parse JSON file
+	print('Parsing JSON file {}...'.format(args.payloadFile))
+	payload = {}
+	with open(args.payloadFile, 'r') as f:
+		jsonString = ''
+		for line in f:
+			jsonString += line
+		payload = json.loads(jsonString)
 	
-	download(memeDict.get('memes'))
+	download(payload.get('memes'))
 
 def download(memeList):
 	for meme in memeList:
@@ -60,5 +55,9 @@ def download(memeList):
 if __name__ == '__main__':
 	if not os.path.exists(args.saveDirectory):
 		os.makedirs(args.saveDirectory)
+	
+	if not os.path.exists(args.payloadFile):
+		with open(args.payloadFile, 'w') as f:
+			f.close()
 	
 	main()

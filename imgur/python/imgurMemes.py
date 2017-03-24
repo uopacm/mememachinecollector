@@ -56,4 +56,16 @@ def getMemes(args):
 		}
 		payload.get('memes').append(pMeme)
 	
-	return json.dumps(payload, ensure_ascii=False) # If this gives you an error, change ensure_ascii to True
+	currentPayload = {}
+	with open(args.payloadFile, 'r') as f:
+		jsonString = ''
+		for line in f:
+			jsonString += line
+			jsonString += '\n'
+		currentPayload = json.loads(jsonString)
+	
+	for meme in payload.get('memes'):
+		currentPayload.get('memes').append(meme)
+	
+	with open(args.payloadFile, 'w') as f:
+		f.write(json.dumps(currentPayload))

@@ -26,7 +26,19 @@ def getMemes(args):
 				}
 				payload.get('memes').append(meme)
 			
-			return json.dumps(payload, ensure_ascii=False) # I will test this soon, and if I don't, please do. If this part crashes, change ensure_ascii to True.
+			currentPayload = {}
+			with open(args.payloadFile, 'r') as f:
+				jsonString = ''
+				for line in f:
+					jsonString += line
+					jsonString += '\n'
+				currentPayload = json.loads(jsonString)
+			
+			for meme in payload.get('memes'):
+				currentPayload.get('memes').append(meme)
+			
+			with open(args.payloadFile, 'w') as f:
+				f.write(json.dumps(currentPayload))
 		else:
 			print('Pull not successful!')
 	else:
@@ -41,4 +53,16 @@ def getMemes(args):
 				}
 				payload.get('memes').append(meme)
 			
-			return json.dumps(payload, ensure_ascii=False) # same as above
+			currentPayload = {}
+			with open(args.payloadFile, 'r') as f:
+				jsonString = ''
+				for line in f:
+					jsonString += line
+					jsonString += '\n'
+				currentPayload = json.loads(jsonString)
+			
+			for meme in payload.get('memes'):
+				currentPayload.get('memes').append(meme)
+			
+			with open(args.payloadFile, 'w') as f:
+				f.write(json.dumps(currentPayload))
