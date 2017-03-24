@@ -1,5 +1,6 @@
 from reddit.python import redditMemes
 from imgur.python import imgurMemes
+from memegenerator.python import memeGenMemes
 import json
 from urllib import request
 import time
@@ -10,6 +11,7 @@ parser = argparse.ArgumentParser(description='Save memes in a directory')
 parser.add_argument('urlNumber', type=int, help='Number of URLs to look up per subreddit')
 parser.add_argument('subReddits', type=str, help='File containing list of subreddits', default="subredditList.txt")
 parser.add_argument('saveDirectory', type=str, help='Directory to save images in')
+parser.add_argument('popularNew', type=bool, help='Get Popular (1) or New (0) Memes from MemeGenerator', default=False)
 args = parser.parse_args()
 
 def main():
@@ -17,15 +19,24 @@ def main():
 		'memes': []
 	}
 	# Receive from Reddit
+	print('Receiving JSON payload from Reddit...')
 	reddit = redditMemes.getMemes(args)
 	redditJson = json.loads(reddit)
 	for meme in redditJson.get('memes'):
 		memeDict.get('memes').append(meme)
 	
 	# Receive from Imgur
+	print('Receiving JSON payload from Imgur...')
 	imgur = imgurMemes.getMemes(args)
 	imgurJson = json.loads(imgur)
 	for meme in imgurJson.get('memes'):
+		memeDict.get('memes').append(meme)
+	
+	# Receive from MemeGenerator
+	print('Receiving JSON payload from MemeGenerator...')
+	memeGen = memeGenMemes.getMemes(args)
+	memeGenJson = json.loads(memeGen)
+	for meme in memeGenJson.get('memes'):
 		memeDict.get('memes').append(meme)
 	
 	with open('payload.json', 'w') as f:

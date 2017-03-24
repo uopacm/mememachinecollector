@@ -47,6 +47,7 @@ def getMemes(args):
 	}
 	
 	for i,id in enumerate(ids):
+		print('http://imgur.com/{}.png'.format(id))
 		pMeme = {
 			'url': 'http://imgur.com/{}.png'.format(id),
 			'text0': i,

@@ -29,10 +29,7 @@ def getMemes(args):
 		for url in posts[0]:
 			urls.append(url)
 		
-		for title in posts[1]:
-			titles.append(title)
-		
-		for date in posts[2]:
+		for date in posts[1]:
 			dates.append(date)
 	
 	subreddit = getRandomSubreddit(subreddits)
@@ -41,10 +38,7 @@ def getMemes(args):
 	for url in posts[0]:
 		urls.append(url)
 	
-	for title in posts[1]:
-		titles.append(title)
-	
-	for date in posts[2]:
+	for date in posts[1]:
 		dates.append(date)
 	
 	payload = {
@@ -52,21 +46,28 @@ def getMemes(args):
 	}
 	
 	for i in range(args.urlNumber):
-		meme = {
-			'url': urls[i],
-			'title': titles[i],
-			'text0': dates[i],
-			'datePosted': dates[i],
-			'datePulled': int(time.time()),
-			'source': 'reddit'
-		}
+		if 'http://imgur.com/' in urls[i][:17] and '.jpg' not in urls[i] and '.png' not in urls[i]:
+			meme = {
+				'url': urls[i] + '.png',
+				'text0': dates[i],
+				'datePosted': dates[i],
+				'datePulled': int(time.time()),
+				'source': 'imgur'
+			}
+		else:
+			meme = {
+				'url': urls[i],
+				'text0': dates[i],
+				'datePosted': dates[i],
+				'datePulled': int(time.time()),
+				'source': 'reddit'
+			}
 		payload.get('memes').append(meme)
 	
 	return json.dumps(payload, ensure_ascii=True)
 
 def getImagesFromSubreddit(subreddit, args):
 	urls = []
-	titles = []
 	dates = []
 	
 	for submission in subreddit.hot(limit=int(args.urlNumber)):
@@ -86,10 +87,9 @@ def getImagesFromSubreddit(subreddit, args):
 			request.urlretrieve(url, '{}/image{}.png'.format(args.saveDirectory,i))'''
 		if '.jpg' in url or '.png' in url:
 			urls.append(url)
-			titles.append(submission.title)
 			dates.append(submission.created)
 			
-	return (urls, titles, dates)
+	return (urls, dates)
 
 def getRandomSubreddit(subreddits):
 	randomSubs = reddit.subreddits.search_by_topic('memes')
