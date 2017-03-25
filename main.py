@@ -1,11 +1,11 @@
 from reddit.python import redditMemes
 from imgur.python import imgurMemes
-from memegenerator.python import memeGenMemes
 import json
 from urllib import request
 import time
 import argparse
 import os
+import subprocess
 
 parser = argparse.ArgumentParser(description='Save memes in a directory')
 parser.add_argument('urlNumber', type=int, help='Number of URLs to look up per subreddit')
@@ -25,8 +25,7 @@ def main():
 	imgurMemes.getMemes(args)
 	
 	# Receive from MemeGenerator
-	print('Receiving JSON payload from MemeGenerator...')
-	memeGenMemes.getMemes(args)
+	
 	
 	# Parse JSON file
 	print('Parsing JSON file {}...'.format(args.payloadFile))
@@ -42,12 +41,12 @@ def main():
 def download(memeList):
 	for meme in memeList:
 		time.sleep(1)
-		print('Downloading ' + meme.get('url') + '...')
+		print('Downloading ' + meme.get('imageUrl') + '...')
 		
 		if '.jpg' in meme.get('url'):
-			request.urlretrieve(meme.get('url'), '{}/{}{}.jpg'.format(args.saveDirectory, meme.get('source'), meme.get('text0')))
+			request.urlretrieve(meme.get('imageUrl'), '{}/{}{}.jpg'.format(args.saveDirectory, meme.get('source'), int(meme.get('text0'))))
 		elif '.png' in meme.get('url'):
-			request.urlretrieve(meme.get('url'), '{}/{}{}.png'.format(args.saveDirectory, meme.get('source'), meme.get('text0')))
+			request.urlretrieve(meme.get('imageUrl'), '{}/{}{}.png'.format(args.saveDirectory, meme.get('source'), int(meme.get('text0'))))
 		
 		print('Done.')
 
