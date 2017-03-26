@@ -39,25 +39,13 @@ def main():
 			jsonString += line
 		payload = json.loads(jsonString)
 	
-	pdb.set_trace()
 	download(payload.get('memes'))
 
 def download(memeList):
 	for meme in memeList:
 		time.sleep(1)
 		print('Downloading ' + meme.get('imageUrl') + '...')
-		
-		if meme.get('source') != 'memegenerator':
-			if '.jpg' in meme.get('imageUrl'):
-				request.urlretrieve(meme.get('imageUrl'), '{}/{}_{}.jpg'.format(args.saveDirectory, meme.get('source'), int(meme.get('text0'))))
-			elif '.png' in meme.get('imageUrl'):
-				request.urlretrieve(meme.get('imageUrl'), '{}/{}_{}.png'.format(args.saveDirectory, meme.get('source'), int(meme.get('text0'))))
-		else:
-			if '.jpg' in meme.get('imageUrl'):
-				request.urlretrieve(meme.get('imageUrl'), '{}/{}_{}.jpg'.format(args.saveDirectory, meme.get('source'), meme.get('title')))
-			elif '.png' in meme.get('imageUrl'):
-				request.urlretrieve(meme.get('imageUrl'), '{}/{}_{}.png'.format(args.saveDirectory, meme.get('source'), meme.get('title')))
-		
+		request.urlretrieve(meme.get('imageUrl'), '{}/{}_{}'.format(args.saveDirectory, meme.get('source'), meme.get('filename')))
 		print('Done.')
 
 if __name__ == '__main__':
@@ -68,8 +56,7 @@ if __name__ == '__main__':
 		with open(args.payloadFile, 'w') as f:
 			f.close()
 	
-	if not os.path.exists('{}_memegenerator.json'.format(args.payloadFile.replace('.json', ''))):
-		with open('{}_memegenerator.json'.format(args.payloadFile.replace('.json', '')), 'w') as f:
-			f.close()
+	with open('{}_memegenerator.json'.format(args.payloadFile.replace('.json', '')), 'w') as f:
+		f.close()
 	
 	main()

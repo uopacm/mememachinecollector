@@ -8,9 +8,9 @@ def getMemes(args):
 	
 	if sys.platform.startswith('win'):
 		if args.popularNew:
-			p = subprocess.Popen(['memegenerator/haskell/memgenerator-scraper.exe', '--channel', 'popular', '--outputFile', '{}_memegenerator.json'.format(args.payloadFile.replace('.json', ''))])
+			p = subprocess.Popen(['runhaskell', 'memegenerator/haskell/Main.hs', '--channel', 'popular', '--outputFile', '{}_memegenerator.json'.format(args.payloadFile.replace('.json', ''))])
 		else:
-			p = subprocess.Popen(['memegenerator/haskell/memgenerator-scraper.exe', '--channel', 'new', '--outputFile', '{}_memegenerator.json'.format(args.payloadFile.replace('.json', ''))])
+			p = subprocess.Popen(['runhaskell', 'memegenerator/haskell/Main.hs', '--channel', 'new', '--outputFile', '{}_memegenerator.json'.format(args.payloadFile.replace('.json', ''))])
 	elif sys.platform.startswith('linux'):
 		if args.popularNew:
 			# Put run code here
@@ -64,12 +64,13 @@ def getMemes(args):
 			currentPayload += line
 	
 	payloadDict = json.loads(currentPayload)
-	pdb.set_trace()
 	memeGenDict = json.loads(memeGenJSON)
 	
 	for meme in memeGenDict.get('memes'):
 		payloadDict.get('memes').append(meme)
-		payloadDict.setdefault('source', 'memegenerator')
+	
+	for meme in payloadDict.get('memes'):
+		meme.setdefault('filename', meme.get('imageUrl')[32:])
 	
 	with open(args.payloadFile, 'w') as f:
 		f.write(json.dumps(payloadDict))

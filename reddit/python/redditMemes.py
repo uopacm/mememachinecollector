@@ -46,22 +46,39 @@ def getMemes(args):
 	}
 	
 	for i in range(args.urlNumber):
+		meme = {}
 		if 'http://imgur.com/' in urls[i][:17] and '.jpg' not in urls[i] and '.png' not in urls[i]:
 			meme = {
 				'imageUrl': urls[i] + '.png',
-				'text0': dates[i],
+				'text0': None,
+				'text1': None,
 				'datePosted': dates[i],
 				'datePulled': time.time(),
-				'source': 'imgur'
+				'source': 'imgur',
+				'filename': '{}.png'.format(dates[i])
 			}
 		else:
-			meme = {
-				'imageUrl': urls[i],
-				'text0': dates[i],
-				'datePosted': dates[i],
-				'datePulled': time.time(),
-				'source': 'reddit'
-			}
+			if '.jpg' in urls[i]:
+				meme = {
+					'imageUrl': urls[i],
+					'text0': None,
+					'text1': None,
+					'datePosted': dates[i],
+					'datePulled': time.time(),
+					'source': 'reddit',
+					'filename': '{}.jpg'.format(dates[i])
+				}
+			elif '.png' in urls[i]:
+				meme = {
+					'imageUrl': urls[i],
+					'text0': None,
+					'text1': None,
+					'datePosted': dates[i],
+					'datePulled': time.time(),
+					'source': 'reddit',
+					'filename': '{}.png'.format(dates[i])
+					
+				}
 		payload.get('memes').append(meme)
 	
 	with open(args.payloadFile, 'w') as f:

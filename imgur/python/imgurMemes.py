@@ -52,7 +52,8 @@ def getMemes(args):
 			'imageUrl': 'http://imgur.com/{}.png'.format(id),
 			'text0': i,
 			'datePulled': int(time.time()),
-			'source': 'imgur'
+			'source': 'imgur',
+			'filename': '{}.png'.format(id)
 		}
 		payload.get('memes').append(pMeme)
 	
