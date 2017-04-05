@@ -1,17 +1,3 @@
-#!/usr/bin/env stack
-{- stack
-   script
-   --resolver lts-8.5
-   --package wreq
-   --package aeson
-   --package lens-aeson
-   --package lens
-   --package text
-   --package bytestring
-   --package optparse-generic
-   --package time
--}
-
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
@@ -28,10 +14,12 @@ import Data.Aeson
 import Data.Aeson.Types
 import Data.Aeson.Lens
 import Data.Time.Clock.POSIX
+import Data.Maybe
 import qualified Data.Text as T
 import qualified Data.Text.IO as TIO
 import qualified Data.Text.Lazy.Encoding as TE
 import qualified Data.ByteString.Lazy as BL
+import qualified Data.Vector as V
 
 data ScraperOptions = ScraperOptions
     { channel :: String -- ^ new | popular
@@ -63,9 +51,8 @@ popular = "http://version1.api.memegenerator.net/Instances_Select_ByPopular"
 new = "http://version1.api.memegenerator.net/Instances_Select_ByNew"
 
 
-process :: FilePath -> Maybe Meme -> IO ()
-process _ Nothing = return ()
-process path (Just m) = BL.appendFile path (encode . toJSON $ m)
+process :: FilePath -> [Meme] -> IO ()
+process path m = BL.appendFile path (encode . toJSON $ m)
 
 validateChannel :: ScraperOptions -> Maybe ScraperOptions
 validateChannel (ScraperOptions c o)
@@ -78,7 +65,7 @@ scrape (ScraperOptions url out) = do
     r <- get url
     t <- round <$> getPOSIXTime
     case decode @Value (r ^. responseBody) of
-      Just r' -> mapM_ (process out . parseMaybe (meme t)) (r' ^. key "result" . _Array)
+      Just r' -> process out . catMaybes . V.toList . fmap (parseMaybe (meme t)) $ (r' ^. key "result" . _Array)
       Nothing -> print "pull failed!"
 
 main :: IO ()

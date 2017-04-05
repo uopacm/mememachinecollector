@@ -16,4 +16,5 @@ executable memgenerator-scraper
                      , bytestring
                      , optparse-generic
                      , time
+                     , vector
   default-language:    Haskell2010
