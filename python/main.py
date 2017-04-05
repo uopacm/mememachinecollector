@@ -1,6 +1,6 @@
-from reddit.python import redditMemes
-from imgur.python import imgurMemes
-from memegenerator.python import memeGenMemes
+from reddit import redditMemes
+from imgur import imgurMemes
+from memegenerator import memeGenMemes
 import json
 from urllib import request
 import time
