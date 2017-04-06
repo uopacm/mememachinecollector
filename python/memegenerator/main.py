@@ -20,9 +20,13 @@ def getMemes(args):
 				print(popularDict.get('result')[i].get('imageUrl'))
 				meme = {
 					'url': popularDict.get('result')[i].get('imageUrl'),
-					'text0': popularDict.get('result')[i].get('imageID'),
+					'text0': popularDict.get('result')[i].get('text0'),
+					'text1': popularDict.get('result')[i].get('text1'),
+					'datePosted': None,
 					'datePulled': int(time.time()),
-					'source': 'memegenerator'
+					'source': 'memegenerator',
+					'title': popularDict.get('result')[i].get('title'),
+					'filename': i
 				}
 				payload.get('memes').append(meme)
 			
@@ -47,9 +51,12 @@ def getMemes(args):
 				print(newDict.get('result')[i].get('imageUrl'))
 				meme = {
 					'url': newDict.get('result')[i].get('imageUrl'),
-					'text0': newDict.get('result')[i].get('imageID'),
+					'text0': newDict.get('result')[i].get('text0'),
+					'text1': newDict.get('result')[i].get('text1'),
+					'datePosted': None,
 					'datePulled': int(time.time()),
-					'source': 'memegenerator'
+					'source': 'memegenerator',
+					'filename': i
 				}
 				payload.get('memes').append(meme)
 			

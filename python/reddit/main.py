@@ -10,8 +10,14 @@ reddit = praw.Reddit(client_id='B8ZEg7a304hCfw',
 	user_agent='meme-machine:reddit-collector:v1.0 (by /u/theMusicalGamer88)')
 
 def getMemes(args):
-	subredditsFile = open(args.subReddits, "r")
-
+	#subredditsFile = open(args.subReddits, "r")
+	
+	if os.path.exists(args.subReddits):
+		subredditsFile = open(args.subReddits, 'r')
+	elif os.path.exists('reddit/{}'.format(args.subReddits)):
+		subredditsFile = open(args.subReddits, 'r')
+	else:																				# This part should probably be changed as I have never manually thrown exceptions in my Python code
+		raise FileNotFoundException('File {} not found.'.format(args.subReddits))		# Anyone who knows more about raising exceptions in Python, please feel free to modify this code
 	subreddits = []
 
 	#read subreddit names from file into list "subreddits" as subreddit objects
@@ -99,10 +105,6 @@ def getImagesFromSubreddit(subreddit, args):
 
 		# Fetch Images
 		print(url)
-		'''if '.jpg' in url:
-			request.urlretrieve(url, '{}/image{}.jpg'.format(args.saveDirectory,i))
-		elif '.png' in url:
-			request.urlretrieve(url, '{}/image{}.png'.format(args.saveDirectory,i))'''
 		if '.jpg' in url or '.png' in url:
 			urls.append(url)
 			dates.append(submission.created)

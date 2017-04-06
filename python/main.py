@@ -1,6 +1,6 @@
-from reddit import redditMemes
-from imgur import imgurMemes
-from memegenerator import memeGenMemes
+from reddit import main as redditMemes
+from imgur import main as imgurMemes
+from memegenerator import main as memeGenMemes
 import json
 from urllib import request
 import time
@@ -20,7 +20,10 @@ args = parser.parse_args()
 def main():
 	# Receive from Reddit
 	print('Receiving JSON payload from Reddit...')
-	redditMemes.getMemes(args)
+	try:
+		redditMemes.getMemes(args)
+	except FileNotFoundException as e:			# This part should probably be changed as I have never manually thrown exceptions in my Python code
+		print('Error: {}'.format(repr(e)))		# Anyone who knows more about raising exceptions in Python, please feel free to modify this code
 	
 	# Receive from Imgur
 	print('Receiving JSON payload from Imgur...')
